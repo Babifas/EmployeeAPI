@@ -1,4 +1,8 @@
 
+using EmployeeAPI.Data;
+using EmployeeAPI.Services;
+using Microsoft.EntityFrameworkCore;
+
 namespace EmployeeAPI
 {
     public class Program
@@ -13,6 +17,11 @@ namespace EmployeeAPI
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddDbContext<EmployeeDbContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
+            builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
             var app = builder.Build();
 
