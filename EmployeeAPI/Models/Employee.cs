@@ -10,5 +10,7 @@ namespace EmployeeAPI.Models
         public string? Job {  get; set; }
         public int Salary { get; set; } 
         public DateTime JoinDate {  get; set; }
+        public int departmentId {  get; set; }
+        public Department department { get; set; }  
     }
 }

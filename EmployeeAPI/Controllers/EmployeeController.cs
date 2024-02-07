@@ -27,15 +27,15 @@ namespace EmployeeAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddEmployee([FromBody] Employee employee)
+        public IActionResult AddEmployee([FromBody] EmployeeDto employeedto)
         {
-            _employeeService.AddEmployee(employee);
+            _employeeService.AddEmployee(employeedto);
             return Ok("Added Successfully");
         }
         [HttpPut("{id}")]
-        public IActionResult UpdateEmployee([FromBody] Employee employee,int id) 
+        public IActionResult UpdateEmployee([FromBody] EmployeeDto employeedto, int id) 
         { 
-          _employeeService.UpdateEmployee(employee,id);
+          _employeeService.UpdateEmployee(employeedto,id);
             return Ok("updated successfully");
         }
         [HttpDelete]

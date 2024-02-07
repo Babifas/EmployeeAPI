@@ -4,6 +4,7 @@ using EmployeeAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EmployeeAPI.Migrations
 {
     [DbContext(typeof(EmployeeDbContext))]
-    partial class EmployeeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240207071120_migration101")]
+    partial class migration101
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,12 +33,12 @@ namespace EmployeeAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("deptId"));
 
-                    b.Property<string>("deptName")
+                    b.Property<string>("name")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("deptId");
 
-                    b.ToTable("Departments");
+                    b.ToTable("Department");
                 });
 
             modelBuilder.Entity("EmployeeAPI.Models.Employee", b =>
@@ -58,12 +61,12 @@ namespace EmployeeAPI.Migrations
                     b.Property<int>("Salary")
                         .HasColumnType("int");
 
-                    b.Property<int>("departmentId")
+                    b.Property<int>("departmentdeptId")
                         .HasColumnType("int");
 
                     b.HasKey("EmployeeId");
 
-                    b.HasIndex("departmentId");
+                    b.HasIndex("departmentdeptId");
 
                     b.ToTable("Employees");
                 });
@@ -71,17 +74,12 @@ namespace EmployeeAPI.Migrations
             modelBuilder.Entity("EmployeeAPI.Models.Employee", b =>
                 {
                     b.HasOne("EmployeeAPI.Models.Department", "department")
-                        .WithMany("employees")
-                        .HasForeignKey("departmentId")
+                        .WithMany()
+                        .HasForeignKey("departmentdeptId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("department");
-                });
-
-            modelBuilder.Entity("EmployeeAPI.Models.Department", b =>
-                {
-                    b.Navigation("employees");
                 });
 #pragma warning restore 612, 618
         }

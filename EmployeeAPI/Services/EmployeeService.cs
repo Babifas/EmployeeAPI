@@ -1,34 +1,49 @@
-﻿using EmployeeAPI.Data;
+﻿using AutoMapper;
+using EmployeeAPI.Data;
 using EmployeeAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeAPI.Services
 {
     public class EmployeeService:IEmployeeService
     {
         private  readonly EmployeeDbContext _context;
-        public EmployeeService(EmployeeDbContext context) 
+        private  readonly IMapper _mapper;
+        public EmployeeService(EmployeeDbContext context,IMapper mapper) 
         {
               _context = context;
+              _mapper = mapper;
         }
-        public List<Employee> GetAllEmployees()
+        public List<EmployeeViewDto> GetAllEmployees()
         {
-            return _context.Employees.ToList();
+            var employee = _context.Employees.Include(e => e.department).ToList();
+            var employeedeatails = employee.Select(e => new EmployeeViewDto
+            {
+                EmployeeId = e.EmployeeId,
+                Name = e.Name,
+                Job=e.Job,
+                Salary=e.Salary,
+                JoinDate= e.JoinDate,
+                departmentName=e.department.deptName
+            });
+            return employeedeatails.ToList();
         }
-        public Employee EmployeeGetById(int id)
+        public EmployeeViewDto EmployeeGetById(int id)
         {
-            return _context.Employees.Find(id);
+            return _mapper.Map<EmployeeViewDto>(_context.Employees.Find(id));
         }
-        public void AddEmployee(Employee employee)
+        public void AddEmployee(EmployeeDto employeedto)
         {
+            var employee=_mapper.Map<Employee>(employeedto);
             _context.Employees.Add(employee);
             _context.SaveChanges();
         }
-        public void UpdateEmployee(Employee employee, int id)
+        public void UpdateEmployee(EmployeeDto employeedto, int id)
         {
            var emp=_context.Employees.Find(id);
-           emp.Name= employee.Name;
-           emp.Job= employee.Job;
-           emp.Salary = employee.Salary;
+           emp.Name= employeedto.Name;
+           emp.Job= employeedto.Job;
+           emp.Salary = employeedto.Salary;
            emp.JoinDate = DateTime.Now;
            _context.SaveChanges();
         }
